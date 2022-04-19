@@ -116,6 +116,34 @@ function load_mailbox(mailbox) {
         console.log(emails);
 
         // ... do something else with emails ...
+        emails.forEach(element => {
+
+          // Variables for later
+          const id = element.id
+          const recipients = element.recipients
+          const subject = element.subject
+          const timestamp = element.timestamp
+
+          // Create übergeordnetes div (ul)
+          const ul = document.createElement ("ul")
+
+          // Create a li for each variable
+          const recipients_li = document.createElement ("li");
+          recipients_li.innerHTML = recipients;
+
+          const subject_li = document.createElement ("li");
+          subject_li.innerHTML = subject;
+
+          const timestamp_li = document.createElement ("li");
+          timestamp_li.innerHTML = timestamp;
+
+          ul.appendChild(recipients_li);
+          ul.appendChild(subject_li);
+          ul.appendChild(timestamp_li);
+
+          document.getElementById("emails-view").appendChild(ul);
+
+        });
     })
   }
 
