@@ -78,7 +78,6 @@ function compose_email() {
 
 
 
-
 function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
@@ -90,7 +89,7 @@ function load_mailbox(mailbox) {
 
 
 
-  // IF INBOX - EUR
+  // IF INBOX
   if (mailbox === "inbox")
   {
     fetch('/emails/inbox')
@@ -100,13 +99,50 @@ function load_mailbox(mailbox) {
         console.log(emails);
 
         // ... do something else with emails ...
+        emails.forEach(element => {
+
+          // Variables for later
+          const id = element.id
+          const sender = element.sender
+          const subject = element.subject
+          const timestamp = element.timestamp
+
+          // Create übergeordnetes div (ul)
+          const div = document.createElement ("div")
+          div.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+
+          // OnClick -> Redirect to email id
+          div.onclick = function () {
+            alert ("Redirect to email id");
+        };
+        
+
+          // Create a li for each variable
+          const sender_li = document.createElement ("li");
+          sender_li.innerHTML = sender;
+          sender_li.setAttribute("style", "font-weight: bold");
+
+          const subject_li = document.createElement ("li");
+          subject_li.innerHTML = subject;
+
+          const timestamp_li = document.createElement ("li");
+          timestamp_li.innerHTML = timestamp;
+          timestamp_li.setAttribute("style", "color: gray");
+
+          div.appendChild(sender_li);
+          div.appendChild(subject_li);
+          div.appendChild(timestamp_li);
+
+          document.getElementById("emails-view").appendChild(div);
+
+        });
     })
   }
   
 
 
 
-  // IF SENT - GBP
+  // IF SENT
   else if (mailbox === "sent")
   {
     fetch('/emails/sent')
@@ -118,6 +154,8 @@ function load_mailbox(mailbox) {
         // ... do something else with emails ...
         emails.forEach(element => {
 
+          
+
           // Variables for later
           const id = element.id
           const recipients = element.recipients
@@ -125,23 +163,32 @@ function load_mailbox(mailbox) {
           const timestamp = element.timestamp
 
           // Create übergeordnetes div (ul)
-          const ul = document.createElement ("ul")
+          const div = document.createElement ("div")
+          div.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+
+          // OnClick -> Redirect to email id
+          div.onclick = function () {
+            alert ("Redirect to email id");
+        };
+        
 
           // Create a li for each variable
           const recipients_li = document.createElement ("li");
           recipients_li.innerHTML = recipients;
+          recipients_li.setAttribute("style", "font-weight: bold");
 
           const subject_li = document.createElement ("li");
           subject_li.innerHTML = subject;
 
           const timestamp_li = document.createElement ("li");
           timestamp_li.innerHTML = timestamp;
+          timestamp_li.setAttribute("style", "color: gray");
 
-          ul.appendChild(recipients_li);
-          ul.appendChild(subject_li);
-          ul.appendChild(timestamp_li);
+          div.appendChild(recipients_li);
+          div.appendChild(subject_li);
+          div.appendChild(timestamp_li);
 
-          document.getElementById("emails-view").appendChild(ul);
+          document.getElementById("emails-view").appendChild(div);
 
         });
     })
