@@ -20,7 +20,64 @@ function compose_email() {
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
+
+
+  // ACTION
+  // Select the submit button and inputs to be used later
+  const body_compose_sender = document.querySelector ("#compose-sender");
+  const body_compose_recipients = document.querySelector ("#compose-recipients");
+  const body_compose_subject = document.querySelector ("#compose-subject");
+  const body_compose_body = document.querySelector ("#compose-body");
+  const body_compose_submit = document.querySelector ("#compose-submit");
+
+  // Listen for submission of form
+  document.querySelector ("#compose-form").onsubmit = () => {
+    // Get the actual values
+    const compose_sender = body_compose_sender.value;
+    const compose_recipients = body_compose_recipients.value;
+    const compose_subject = body_compose_subject.value;
+    const compose_body = body_compose_body.value;
+
+    // Console.log out
+    console.log (`Sender: ${compose_sender}`);
+    console.log (`Recipients: ${compose_recipients}`)
+    console.log (`Subject: ${compose_subject}`)
+    console.log (`Body: ${compose_body}`)
+
+    // Send to API via POST
+    fetch('/emails', {
+      method: 'POST',
+      body: JSON.stringify({
+          recipients: compose_recipients,
+          subject: compose_subject,
+          body: compose_body
+      })
+    })
+    .then(response => response.json())
+    .then(result => {
+        // Print result
+        console.log(result);
+    });
+
+    // Clear out input fields
+    body_compose_recipients.value = "";
+    body_compose_subject.value = "";
+    body_compose_body.value = "";
+
+    // Go to sent
+
+  }
+
+
 }
+
+
+
+
+
+
+
+
 
 function load_mailbox(mailbox) {
   
