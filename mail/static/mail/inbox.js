@@ -111,12 +111,6 @@ function load_mailbox(mailbox) {
           const div = document.createElement ("div")
           div.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
 
-          // OnClick -> Redirect to email id
-          div.onclick = function () {
-            alert (`Redirect to email no. ${id}`);
-        };
-        
-
           // Create a li for each variable
           const sender_li = document.createElement ("li");
           sender_li.innerHTML = sender;
@@ -134,6 +128,40 @@ function load_mailbox(mailbox) {
           div.appendChild(timestamp_li);
 
           document.getElementById("emails-view").appendChild(div);
+
+
+
+          //////////////////////////////////
+          // OnClick -> Redirect to email id
+          div.onclick = function () {
+
+            fetch(`/emails/${id}`)
+            .then(response => response.json())
+            .then(email => {
+                // Print email
+                console.log(email);
+                
+
+                // ... do something else with email ...
+                const id = email.id;
+                const sender = email.sender;
+                const recipients = email.recipients;
+                const subject = email.subject;
+                const timestamp = email.timestamp;
+
+                const body = email.body;
+
+                // Create übergeordnetes div (ul)
+          const div = document.createElement ("div")
+          div.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+
+
+
+                
+            });
+            
+
+        };
 
         });
     })
