@@ -108,8 +108,9 @@ function load_mailbox(mailbox) {
           const timestamp = element.timestamp
 
           // Create übergeordnetes div (ul)
-          const div = document.createElement ("div")
-          div.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+          const emails_view_all = document.createElement ("div");
+          emails_view_all.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+          emails_view_all.setAttribute("class", "emails-view-all");
 
           // Create a li for each variable
           const sender_li = document.createElement ("li");
@@ -123,45 +124,77 @@ function load_mailbox(mailbox) {
           timestamp_li.innerHTML = timestamp;
           timestamp_li.setAttribute("style", "color: gray");
 
-          div.appendChild(sender_li);
-          div.appendChild(subject_li);
-          div.appendChild(timestamp_li);
+          emails_view_all.appendChild(sender_li);
+          emails_view_all.appendChild(subject_li);
+          emails_view_all.appendChild(timestamp_li);
 
-          document.getElementById("emails-view").appendChild(div);
-
-
-
-          //////////////////////////////////
-          // OnClick -> Redirect to email id
-          div.onclick = function () {
-
-            fetch(`/emails/${id}`)
-            .then(response => response.json())
-            .then(email => {
-                // Print email
-                console.log(email);
-                
-
-                // ... do something else with email ...
-                const id = email.id;
-                const sender = email.sender;
-                const recipients = email.recipients;
-                const subject = email.subject;
-                const timestamp = email.timestamp;
-
-                const body = email.body;
-
-                // Create übergeordnetes div (ul)
-          const div = document.createElement ("div")
-          div.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+          document.getElementById("emails-view").appendChild(emails_view_all);
 
 
+          
+            //////////////////////////////////
+            // OnClick -> Redirect to email id
+            emails_view_all.onclick = function () {
 
-                
-            });
-            
+              fetch(`/emails/${id}`)
+              .then(response => response.json())
+              .then(email => {
+                  // Print email
+                  console.log(email);
+                  
 
-        };
+                  // Variables
+                  const id = email.id;
+                  const email_sender = email.sender;
+                  const email_recipients = email.recipients;
+                  const email_subject = email.subject;
+                  const email_timestamp = email.timestamp;
+
+                  const email_body = email.body;
+
+                  // Hide the emails-view div (all emails)
+                  
+
+                  var divsToHide = document.getElementsByClassName("emails-view-all"); //divsToHide is an array
+                    for(var i = 0; i < divsToHide.length; i++)
+                        {
+                          divsToHide[i].style.display = "none";
+                        }
+
+                  // Create new div for email
+                  // Create übergeordnetes div (ul)
+                  const single_email = document.createElement ("div");
+                  single_email.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+                  single_email.setAttribute("id", "single_email");
+                  document.getElementById("emails-view").appendChild(single_email);
+
+                    // Create a li for each variable
+                    const email_sender_li = document.createElement ("li");
+                    email_sender_li.innerHTML = `FROM: ${email_sender}`;
+
+                    const email_recipients_li = document.createElement ("li");
+                    email_recipients_li.innerHTML = `TO: ${email_recipients}`;
+
+                    const email_subject_li = document.createElement ("li");
+                    email_subject_li.innerHTML = `SUBJECT: ${email_subject}`;
+
+                    const email_timestamp_li = document.createElement ("li");
+                    email_timestamp_li.innerHTML = `TIMESTAMP: ${email_timestamp}`;
+
+                    const email_body_li = document.createElement ("li");
+                    email_body_li.innerHTML = email_body
+
+                  single_email.appendChild(email_sender_li);
+                  single_email.appendChild(email_recipients_li);
+                  single_email.appendChild(email_subject_li);
+                  single_email.appendChild(email_timestamp_li);
+                  single_email.appendChild(email_body_li);
+
+                  document.getElementById("emails-view").appendChild(single_email);
+
+              });
+              
+          };
 
         });
     })
@@ -182,8 +215,6 @@ function load_mailbox(mailbox) {
         // ... do something else with emails ...
         emails.forEach(element => {
 
-          
-
           // Variables for later
           const id = element.id
           const recipients = element.recipients
@@ -191,13 +222,9 @@ function load_mailbox(mailbox) {
           const timestamp = element.timestamp
 
           // Create übergeordnetes div (ul)
-          const div = document.createElement ("div")
-          div.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
-
-          // OnClick -> Redirect to email id
-          div.onclick = function () {
-            alert (`Redirect to email no. ${id}`);
-        };
+          const emails_view_all = document.createElement ("div");
+          emails_view_all.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+          emails_view_all.setAttribute("class", "emails-view-all");
         
 
           // Create a li for each variable
@@ -212,11 +239,77 @@ function load_mailbox(mailbox) {
           timestamp_li.innerHTML = timestamp;
           timestamp_li.setAttribute("style", "color: gray");
 
-          div.appendChild(recipients_li);
-          div.appendChild(subject_li);
-          div.appendChild(timestamp_li);
+          emails_view_all.appendChild(recipients_li);
+          emails_view_all.appendChild(subject_li);
+          emails_view_all.appendChild(timestamp_li);
 
-          document.getElementById("emails-view").appendChild(div);
+          document.getElementById("emails-view").appendChild(emails_view_all);
+
+
+
+          //////////////////////////////////
+            // OnClick -> Redirect to email id
+            emails_view_all.onclick = function () {
+
+              fetch(`/emails/${id}`)
+              .then(response => response.json())
+              .then(email => {
+                  // Print email
+                  console.log(email);
+                  
+
+                  // Variables
+                  const id = email.id;
+                  const email_sender = email.sender;
+                  const email_recipients = email.recipients;
+                  const email_subject = email.subject;
+                  const email_timestamp = email.timestamp;
+
+                  const email_body = email.body;
+
+                  // Hide the emails-view div (all emails)
+                  
+
+                  var divsToHide = document.getElementsByClassName("emails-view-all"); //divsToHide is an array
+                    for(var i = 0; i < divsToHide.length; i++)
+                        {
+                          divsToHide[i].style.display = "none";
+                        }
+
+                  // Create new div for email
+                  // Create übergeordnetes div (ul)
+                  const single_email = document.createElement ("div");
+                  single_email.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+                  single_email.setAttribute("id", "single_email");
+                  document.getElementById("emails-view").appendChild(single_email);
+
+                    // Create a li for each variable
+                    const email_sender_li = document.createElement ("li");
+                    email_sender_li.innerHTML = `FROM: ${email_sender}`;
+
+                    const email_recipients_li = document.createElement ("li");
+                    email_recipients_li.innerHTML = `TO: ${email_recipients}`;
+
+                    const email_subject_li = document.createElement ("li");
+                    email_subject_li.innerHTML = `SUBJECT: ${email_subject}`;
+
+                    const email_timestamp_li = document.createElement ("li");
+                    email_timestamp_li.innerHTML = `TIMESTAMP: ${email_timestamp}`;
+
+                    const email_body_li = document.createElement ("li");
+                    email_body_li.innerHTML = email_body
+
+                  single_email.appendChild(email_sender_li);
+                  single_email.appendChild(email_recipients_li);
+                  single_email.appendChild(email_subject_li);
+                  single_email.appendChild(email_timestamp_li);
+                  single_email.appendChild(email_body_li);
+
+                  document.getElementById("emails-view").appendChild(single_email);
+
+              });
+              
+          };
 
         });
     })
