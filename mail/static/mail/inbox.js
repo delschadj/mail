@@ -225,8 +225,6 @@ function load_mailbox(mailbox) {
                   const email_body = email.body;
 
                   // Hide the emails-view div (all emails)
-                  
-
                   var divsToHide = document.getElementsByClassName("emails-view-all"); //divsToHide is an array
                     for(var i = 0; i < divsToHide.length; i++)
                         {
@@ -268,13 +266,29 @@ function load_mailbox(mailbox) {
                     
 `) };
 
-                    
+                    const archive_button = document.createElement ("button");
+                    archive_button.innerHTML = "Archive"
+                    archive_button.onclick = function() {
+
+                        // Mark email as archived
+                        fetch(`/emails/${id}`, {
+                          method: 'PUT',
+                          body: JSON.stringify({
+                              archived: true
+                          })
+                        })
+
+                        alert ("Email is now archived")
+                      }
+               
+
 
                   single_email_head.appendChild(email_sender_li);
                   single_email_head.appendChild(email_recipients_li);
                   single_email_head.appendChild(email_subject_li);
                   single_email_head.appendChild(email_timestamp_li);
                   single_email_head.appendChild(reply_button);
+                  single_email_head.appendChild(archive_button);
                   single_email_body.appendChild(email_body_li);
 
                   document.getElementById("emails-view").appendChild(single_email_head);
@@ -359,20 +373,24 @@ function load_mailbox(mailbox) {
                   const email_body = email.body;
 
                   // Hide the emails-view div (all emails)
-                  
-
-                  var divsToHide = document.getElementsByClassName("emails-view-all"); //divsToHide is an array
+                  var divsToHide = document.getElementsByClassName("emails-view-all");
                     for(var i = 0; i < divsToHide.length; i++)
                         {
                           divsToHide[i].style.display = "none";
                         }
 
-                  // Create new div for email
                   // Create übergeordnetes div (ul)
-                  const single_email = document.createElement ("div");
-                  single_email.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
-                  single_email.setAttribute("id", "single_email");
-                  document.getElementById("emails-view").appendChild(single_email);
+                  const single_email_head = document.createElement ("div");
+                  const single_email_body = document.createElement ("div");
+
+                  single_email_head.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+                  single_email_head.setAttribute("id", "single_email_head");
+
+                  single_email_body.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+                  single_email_body.setAttribute("id", "single_email_body");
+
+                  document.getElementById("emails-view").appendChild(single_email_head);
+                  document.getElementById("emails-view").appendChild(single_email_body);
 
                     // Create a li for each variable
                     const email_sender_li = document.createElement ("li");
@@ -390,13 +408,14 @@ function load_mailbox(mailbox) {
                     const email_body_li = document.createElement ("li");
                     email_body_li.innerHTML = email_body
 
-                  single_email.appendChild(email_sender_li);
-                  single_email.appendChild(email_recipients_li);
-                  single_email.appendChild(email_subject_li);
-                  single_email.appendChild(email_timestamp_li);
-                  single_email.appendChild(email_body_li);
+                  single_email_head.appendChild(email_sender_li);
+                  single_email_head.appendChild(email_recipients_li);
+                  single_email_head.appendChild(email_subject_li);
+                  single_email_head.appendChild(email_timestamp_li);
+                  single_email_body.appendChild(email_body_li);
 
-                  document.getElementById("emails-view").appendChild(single_email);
+                  document.getElementById("emails-view").appendChild(single_email_head);
+                  document.getElementById("emails-view").appendChild(single_email_body);
 
               });
               
@@ -418,6 +437,137 @@ function load_mailbox(mailbox) {
         console.log(emails);
 
         // ... do something else with emails ...
+        emails.forEach(element => {
+
+          // Variables for later
+          const id = element.id
+          const recipients = element.recipients
+          const subject = element.subject
+          const timestamp = element.timestamp
+
+          // Create übergeordnetes div (ul)
+          const emails_view_all = document.createElement ("div");
+          emails_view_all.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+          emails_view_all.setAttribute("class", "emails-view-all");
+        
+
+          // Create a li for each variable
+          const recipients_li = document.createElement ("li");
+          recipients_li.innerHTML = recipients;
+          recipients_li.setAttribute("style", "font-weight: bold");
+
+          const subject_li = document.createElement ("li");
+          subject_li.innerHTML = subject;
+
+          const timestamp_li = document.createElement ("li");
+          timestamp_li.innerHTML = timestamp;
+          timestamp_li.setAttribute("style", "color: gray");
+
+          emails_view_all.appendChild(recipients_li);
+          emails_view_all.appendChild(subject_li);
+          emails_view_all.appendChild(timestamp_li);
+
+          document.getElementById("emails-view").appendChild(emails_view_all);
+
+
+
+          //////////////////////////////////
+            // OnClick -> Redirect to email id
+            emails_view_all.onclick = function () {
+
+              fetch(`/emails/${id}`)
+              .then(response => response.json())
+              .then(email => {
+                  // Print email
+                  console.log(email);
+                  
+
+                  // Variables
+                  const id = email.id;
+                  const email_sender = email.sender;
+                  const email_recipients = email.recipients;
+                  const email_subject = email.subject;
+                  const email_timestamp = email.timestamp;
+
+                  const email_body = email.body;
+
+                  // Hide the emails-view div (all emails)
+                  var divsToHide = document.getElementsByClassName("emails-view-all");
+                    for(var i = 0; i < divsToHide.length; i++)
+                        {
+                          divsToHide[i].style.display = "none";
+                        }
+
+                  // Create übergeordnetes div (ul)
+                  const single_email_head = document.createElement ("div");
+                  const single_email_body = document.createElement ("div");
+
+                  single_email_head.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+                  single_email_head.setAttribute("id", "single_email_head");
+
+                  single_email_body.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+                  single_email_body.setAttribute("id", "single_email_body");
+
+                  document.getElementById("emails-view").appendChild(single_email_head);
+                  document.getElementById("emails-view").appendChild(single_email_body);
+
+                    // Create a li for each variable
+                    const email_sender_li = document.createElement ("li");
+                    email_sender_li.innerHTML = `FROM: ${email_sender}`;
+
+                    const email_recipients_li = document.createElement ("li");
+                    email_recipients_li.innerHTML = `TO: ${email_recipients}`;
+
+                    const email_subject_li = document.createElement ("li");
+                    email_subject_li.innerHTML = `SUBJECT: ${email_subject}`;
+
+                    const email_timestamp_li = document.createElement ("li");
+                    email_timestamp_li.innerHTML = `TIMESTAMP: ${email_timestamp}`;
+
+                    const email_body_li = document.createElement ("li");
+                    email_body_li.innerHTML = email_body
+
+                    const reply_button = document.createElement ("button");
+                    reply_button.innerHTML = "Reply"
+                    reply_button.onclick = function() { compose_email_reply(sender,`RE: ${subject}`,`On ${timestamp} ${sender} wrote: ${email_body}
+                    
+`) };
+
+                    const unarchive_button = document.createElement ("button");
+                    unarchive_button.innerHTML = "Unarchive"
+                    unarchive_button.onclick = function() {
+
+                        // Mark email as unarchived
+                        fetch(`/emails/${id}`, {
+                          method: 'PUT',
+                          body: JSON.stringify({
+                              archived: false
+                          })
+                        })
+
+                        alert ("Email is now unarchived")
+                      }
+               
+
+
+                  single_email_head.appendChild(email_sender_li);
+                  single_email_head.appendChild(email_recipients_li);
+                  single_email_head.appendChild(email_subject_li);
+                  single_email_head.appendChild(email_timestamp_li);
+                  single_email_head.appendChild(reply_button);
+                  single_email_head.appendChild(unarchive_button);
+                  single_email_body.appendChild(email_body_li);
+
+                  document.getElementById("emails-view").appendChild(single_email_head);
+                  document.getElementById("emails-view").appendChild(single_email_body);
+
+              });
+              
+          };
+
+          
+
+        });
     })
   }
 
