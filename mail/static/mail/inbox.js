@@ -38,12 +38,6 @@ function compose_email() {
     const compose_subject = body_compose_subject.value;
     const compose_body = body_compose_body.value;
 
-    // Console.log out
-    console.log (`Sender: ${compose_sender}`);
-    console.log (`Recipients: ${compose_recipients}`)
-    console.log (`Subject: ${compose_subject}`)
-    console.log (`Body: ${compose_body}`)
-
     // Send to API via POST
     fetch('/emails', {
       method: 'POST',
@@ -63,6 +57,9 @@ function compose_email() {
     body_compose_recipients.value = "";
     body_compose_subject.value = "";
     body_compose_body.value = "";
+
+    // Redirect to sent inbox
+    load_mailbox ("sent");
 
   }
 
@@ -279,6 +276,7 @@ function load_mailbox(mailbox) {
                         })
 
                         alert ("Email is now archived")
+                        load_mailbox ("inbox");
                       }
                
 
@@ -526,12 +524,6 @@ function load_mailbox(mailbox) {
                     const email_body_li = document.createElement ("li");
                     email_body_li.innerHTML = email_body
 
-                    const reply_button = document.createElement ("button");
-                    reply_button.innerHTML = "Reply"
-                    reply_button.onclick = function() { compose_email_reply(sender,`RE: ${subject}`,`On ${timestamp} ${sender} wrote: ${email_body}
-                    
-`) };
-
                     const unarchive_button = document.createElement ("button");
                     unarchive_button.innerHTML = "Unarchive"
                     unarchive_button.onclick = function() {
@@ -544,7 +536,8 @@ function load_mailbox(mailbox) {
                           })
                         })
 
-                        alert ("Email is now unarchived")
+                        alert ("Email is now unarchived");
+                        load_mailbox ("inbox");
                       }
                
 
@@ -553,7 +546,6 @@ function load_mailbox(mailbox) {
                   single_email_head.appendChild(email_recipients_li);
                   single_email_head.appendChild(email_subject_li);
                   single_email_head.appendChild(email_timestamp_li);
-                  single_email_head.appendChild(reply_button);
                   single_email_head.appendChild(unarchive_button);
                   single_email_body.appendChild(email_body_li);
 
