@@ -539,8 +539,6 @@ function load_mailbox(mailbox) {
                         alert ("Email is now unarchived");
                         load_mailbox ("inbox");
                       }
-               
-
 
                   single_email_head.appendChild(email_sender_li);
                   single_email_head.appendChild(email_recipients_li);
@@ -555,14 +553,7 @@ function load_mailbox(mailbox) {
               });
               
           };
-
-          
-
         });
     })
   }
-
-  
-  
-
 }
