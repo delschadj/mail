@@ -64,15 +64,69 @@ function compose_email() {
     body_compose_subject.value = "";
     body_compose_body.value = "";
 
-    // Go to sent
-
   }
 
 
 }
 
 
+function compose_email_reply(recipient, subject, body) {
 
+  // Show compose view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'block';
+
+  // Fill in the reply values
+  document.querySelector('#compose-recipients').value = recipient;
+  document.querySelector('#compose-subject').value = subject;
+  document.querySelector('#compose-body').value = body;
+
+
+  // ACTION
+  // Select the submit button and inputs to be used later
+  const body_compose_sender = document.querySelector ("#compose-sender");
+  const body_compose_recipients = document.querySelector ("#compose-recipients");
+  const body_compose_subject = document.querySelector ("#compose-subject");
+  const body_compose_body = document.querySelector ("#compose-body");
+  const body_compose_submit = document.querySelector ("#compose-submit");
+
+  // Listen for submission of form
+  document.querySelector ("#compose-form").onsubmit = () => {
+    // Get the actual values
+    const compose_sender = body_compose_sender.value;
+    const compose_recipients = body_compose_recipients.value;
+    const compose_subject = body_compose_subject.value;
+    const compose_body = body_compose_body.value;
+
+    // Console.log out
+    console.log (`Sender: ${compose_sender}`);
+    console.log (`Recipients: ${compose_recipients}`)
+    console.log (`Subject: ${compose_subject}`)
+    console.log (`Body: ${compose_body}`)
+
+    // Send to API via POST
+    fetch('/emails', {
+      method: 'POST',
+      body: JSON.stringify({
+          recipients: compose_recipients,
+          subject: compose_subject,
+          body: compose_body
+      })
+    })
+    .then(response => response.json())
+    .then(result => {
+        // Print result
+        console.log(result);
+    });
+
+    // Clear out input fields
+    body_compose_recipients.value = "";
+    body_compose_subject.value = "";
+    body_compose_body.value = "";
+
+  }
+
+}
 
 
 
@@ -112,6 +166,16 @@ function load_mailbox(mailbox) {
           emails_view_all.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
           emails_view_all.setAttribute("class", "emails-view-all");
 
+          // If the email is unread, it should appear with a white background
+          if (element.read === false) {
+            emails_view_all.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px ; background-color: white; ");
+          }
+
+          // else, it should appear with a gray background
+          else {
+            emails_view_all.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px; background-color: Gainsboro;");
+          }
+
           // Create a li for each variable
           const sender_li = document.createElement ("li");
           sender_li.innerHTML = sender;
@@ -135,6 +199,14 @@ function load_mailbox(mailbox) {
             //////////////////////////////////
             // OnClick -> Redirect to email id
             emails_view_all.onclick = function () {
+
+              // Mark email as read
+              fetch(`/emails/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    read: true
+                })
+              })
 
               fetch(`/emails/${id}`)
               .then(response => response.json())
@@ -161,12 +233,18 @@ function load_mailbox(mailbox) {
                           divsToHide[i].style.display = "none";
                         }
 
-                  // Create new div for email
                   // Create übergeordnetes div (ul)
-                  const single_email = document.createElement ("div");
-                  single_email.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
-                  single_email.setAttribute("id", "single_email");
-                  document.getElementById("emails-view").appendChild(single_email);
+                  const single_email_head = document.createElement ("div");
+                  const single_email_body = document.createElement ("div");
+
+                  single_email_head.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+                  single_email_head.setAttribute("id", "single_email_head");
+
+                  single_email_body.setAttribute("style", "border: 5px solid black;  padding: 20px; margin: 10px");
+                  single_email_body.setAttribute("id", "single_email_body");
+
+                  document.getElementById("emails-view").appendChild(single_email_head);
+                  document.getElementById("emails-view").appendChild(single_email_body);
 
                     // Create a li for each variable
                     const email_sender_li = document.createElement ("li");
@@ -184,13 +262,23 @@ function load_mailbox(mailbox) {
                     const email_body_li = document.createElement ("li");
                     email_body_li.innerHTML = email_body
 
-                  single_email.appendChild(email_sender_li);
-                  single_email.appendChild(email_recipients_li);
-                  single_email.appendChild(email_subject_li);
-                  single_email.appendChild(email_timestamp_li);
-                  single_email.appendChild(email_body_li);
+                    const reply_button = document.createElement ("button");
+                    reply_button.innerHTML = "Reply"
+                    reply_button.onclick = function() { compose_email_reply(sender,`RE: ${subject}`,`On ${timestamp} ${sender} wrote: ${email_body}
+                    
+`) };
 
-                  document.getElementById("emails-view").appendChild(single_email);
+                    
+
+                  single_email_head.appendChild(email_sender_li);
+                  single_email_head.appendChild(email_recipients_li);
+                  single_email_head.appendChild(email_subject_li);
+                  single_email_head.appendChild(email_timestamp_li);
+                  single_email_head.appendChild(reply_button);
+                  single_email_body.appendChild(email_body_li);
+
+                  document.getElementById("emails-view").appendChild(single_email_head);
+                  document.getElementById("emails-view").appendChild(single_email_body);
 
               });
               
@@ -199,6 +287,9 @@ function load_mailbox(mailbox) {
         });
     })
   }
+
+
+  
   
 
 
