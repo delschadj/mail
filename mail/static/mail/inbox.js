@@ -361,7 +361,6 @@ function load_mailbox(mailbox) {
               .then(email => {
                   // Print email
                   console.log(email);
-                  
 
                   // Variables
                   const id = email.id;
